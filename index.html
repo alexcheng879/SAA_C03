@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AWS 題庫練習</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">AWS 題庫練習</p>
+      <h1>中文題庫練習網站</h1>
+      <p class="subtitle">支援搜尋、跳題、顯示答案與本機進度記錄，可直接部署到 GitHub Pages。</p>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel controls" aria-label="題庫控制區">
+      <label for="searchInput">搜尋題目或選項</label>
+      <input id="searchInput" type="search" placeholder="輸入關鍵字，例如 S3、Lambda、加密" />
+
+      <div class="row">
+        <label for="jumpInput">跳到題號</label>
+        <div class="jump-row">
+          <input id="jumpInput" type="number" min="1" placeholder="題號" />
+          <button id="jumpBtn" type="button">前往</button>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div><strong id="totalCount">0</strong><span>總題數</span></div>
+        <div><strong id="currentPosition">0</strong><span>目前位置</span></div>
+        <div><strong id="answeredCount">0</strong><span>已作答</span></div>
+      </div>
+
+      <div class="button-grid">
+        <button id="prevBtn" type="button">上一題</button>
+        <button id="nextBtn" type="button">下一題</button>
+        <button id="showAnswerBtn" type="button" class="secondary">顯示答案</button>
+        <button id="resetBtn" type="button" class="danger">清除進度</button>
+      </div>
+    </section>
+
+    <section class="panel question-card" aria-live="polite">
+      <div id="status" class="status">載入題庫中...</div>
+      <article id="questionView" hidden>
+        <div class="question-topline">
+          <span id="questionId" class="badge"></span>
+          <span id="filterInfo"></span>
+        </div>
+        <h2 id="questionText"></h2>
+        <div id="choices" class="choices"></div>
+        <div id="answerBox" class="answer-box" hidden></div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>資料來源：<code>questions.json</code>。所有作答紀錄只會儲存在目前瀏覽器。</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
