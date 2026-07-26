@@ -1,14 +1,14 @@
 :root {
-  --bg: #f6f7fb;
-  --panel: #ffffff;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --line: #d1d5db;
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --danger: #dc2626;
-  --ok: #047857;
-  --shadow: 0 20px 60px rgba(31, 41, 55, 0.10);
+  --bg: #121212;
+  --panel: #1e1e1e;
+  --text: #f3f4f6;
+  --muted: #9ca3af;
+  --line: #374151;
+  --primary: #3b82f6;
+  --primary-dark: #60a5fa;
+  --danger: #ef4444;
+  --ok: #10b981;
+  --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -20,7 +20,7 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, #dbeafe, transparent 34rem),
+    radial-gradient(circle at top left, #1e3a8a, transparent 34rem),
     var(--bg);
   line-height: 1.6;
 }
@@ -45,6 +45,7 @@ h1 {
   font-size: clamp(2rem, 5vw, 4rem);
   margin: 0;
   line-height: 1.05;
+  color: #ffffff;
 }
 
 .subtitle {
@@ -67,8 +68,8 @@ h1 {
 /* Panels */
 
 .panel {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(209, 213, 219, 0.8);
+  background: rgba(30, 30, 30, 0.85);
+  border: 1px solid rgba(75, 85, 99, 0.6);
   border-radius: 24px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(8px);
@@ -87,7 +88,7 @@ label {
   display: block;
   font-weight: 700;
   margin: 0 0 8px;
-  color: #111827;
+  color: #f3f4f6;
 }
 
 input {
@@ -96,12 +97,12 @@ input {
   border-radius: 14px;
   padding: 12px 14px;
   font-size: 1rem;
-  background: #fff;
-  color: #111827;
+  background: #111827;
+  color: #f3f4f6;
 }
 
 input:focus {
-  outline: 3px solid rgba(37, 99, 235, 0.2);
+  outline: 3px solid rgba(59, 130, 246, 0.3);
   border-color: var(--primary);
 }
 
@@ -143,11 +144,11 @@ button:disabled {
 }
 
 button.secondary {
-  background: #111827;
+  background: #374151;
 }
 
 button.secondary:hover {
-  background: #000;
+  background: #4b5563;
 }
 
 button.danger {
@@ -164,16 +165,16 @@ button.danger {
 }
 
 .stats div {
-  border: 1px solid #dbe2ea;
+  border: 1px solid #374151;
   border-radius: 16px;
   padding: 12px;
-  background: #f8fafc;
+  background: #111827;
 }
 
 .stats strong {
   display: block;
   font-size: 1.35rem;
-  color: #111827;
+  color: #ffffff;
 }
 
 .stats span {
@@ -214,8 +215,8 @@ button.danger {
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  background: #dbeafe;
-  color: #1e40af;
+  background: #1e3a8a;
+  color: #93c5fd;
   padding: 6px 12px;
   font-weight: 800;
 }
@@ -225,7 +226,7 @@ h2 {
   font-size: clamp(1.25rem, 2vw, 1.7rem);
   line-height: 1.55;
   margin: 0 0 22px;
-  color: #111827;
+  color: #ffffff;
 }
 
 /* Choices */
@@ -241,14 +242,14 @@ h2 {
   gap: 12px;
   align-items: start;
 
-  border: 2px solid #cbd5e1;
+  border: 2px solid #374151;
   border-radius: 18px;
   padding: 16px;
 
   cursor: pointer;
 
-  background: #f8fafc;
-  color: #111827;
+  background: #111827;
+  color: #f3f4f6;
 
   transition:
     all 0.2s ease,
@@ -257,25 +258,25 @@ h2 {
 
 .choice:hover {
   border-color: #3b82f6;
-  background: #eff6ff;
+  background: #1e293b;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .choice.selected {
   border-color: var(--primary);
-  background: #dbeafe;
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+  background: #1e3a8a;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
 }
 
 .choice.correct {
   border-color: var(--ok);
-  background: #ecfdf5;
+  background: #064e3b;
 }
 
 .choice.incorrect {
   border-color: var(--danger);
-  background: #fef2f2;
+  background: #7f1d1d;
 }
 
 /* Choice Key */
@@ -290,8 +291,8 @@ h2 {
 
   border-radius: 999px;
 
-  background: #dbeafe;
-  color: #1e3a8a;
+  background: #1e3a8a;
+  color: #93c5fd;
 
   font-weight: 800;
   font-size: 0.95rem;
@@ -305,9 +306,9 @@ h2 {
   margin-top: 20px;
   padding: 16px;
   border-radius: 18px;
-  background: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  color: #065f46;
+  background: #064e3b;
+  border: 1px solid #047857;
+  color: #a7f3d0;
   font-weight: 800;
 }
 
