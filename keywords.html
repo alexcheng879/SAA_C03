@@ -59,7 +59,8 @@ const groups = [
 ['高效能運算 HPC、超高吞吐檔案','Amazon FSx for Lustre','HPC / ML / 大量平行 I/O，可與 S3 整合'],
 ['本地端檔案要延伸到 AWS、混合雲','AWS Storage Gateway - File Gateway','本地 NFS/SMB，後端物件存 S3'],
 ['本地 block storage、iSCSI','Storage Gateway - Volume Gateway','Cached / Stored volumes'],
-['備份磁帶上雲','Storage Gateway - Tape Gateway','虛擬磁帶庫 VTL，取代實體 tape']
+['備份磁帶上雲','Storage Gateway - Tape Gateway','虛擬磁帶庫 VTL，取代實體 tape'],
+['S3 儲存用量 / 活動趨勢 / 全組織可視化','S3 Storage Lens','跨帳號 / 跨 bucket 的 S3 儲存分析與最佳化儀表板']
 ]},
 {cat:'資料庫與快取',rows:[
 ['關聯式資料庫、需要託管','Amazon RDS','MySQL/PostgreSQL/MariaDB/Oracle/SQL Server 等'],
@@ -74,7 +75,9 @@ const groups = [
 ['Redis/Memcached 快取、降低 DB 壓力','Amazon ElastiCache','Session / cache / hot data'],
 ['需要 Redis 相容、持久性、多 AZ','ElastiCache for Redis / Valkey','支援 replication / failover'],
 ['資料倉儲、OLAP、BI 大型分析','Amazon Redshift','Columnar warehouse，分析型工作負載'],
-['搜尋 Log / 全文搜尋','Amazon OpenSearch Service','搜尋、log analytics、observability']
+['搜尋 Log / 全文搜尋','Amazon OpenSearch Service','搜尋、log analytics、observability'],
+['圖形資料庫、關係 / 社群 / 推薦 / 路徑查詢','Amazon Neptune','Managed graph database；適合高度互連資料'],
+['不可竄改交易紀錄、完整歷史 / Ledger','Amazon QLDB','Quantum Ledger Database；可驗證、不可變更的交易日誌']
 ]},
 {cat:'訊息、事件與無伺服器',rows:[
 ['Message Queue、解耦、削峰','Amazon SQS','Producer / consumer 解耦，非同步處理'],
@@ -86,6 +89,7 @@ const groups = [
 ['事件流程有多步驟、重試、分支、狀態','AWS Step Functions','工作流程編排 orchestration'],
 ['短時間事件驅動程式、免管理伺服器','AWS Lambda','Serverless function；按呼叫執行'],
 ['即時 Streaming、大量事件流','Amazon Kinesis Data Streams','Real-time streaming，可多 consumer'],
+['Kinesis、即時資料流、影音/IoT/Clickstream','Amazon Kinesis','AWS 即時串流服務家族；考題看到 streaming / real-time 優先想到 Kinesis'],
 ['串流資料送到 S3 / Redshift / OpenSearch','Amazon Data Firehose','Managed delivery，少維運'],
 ['需要傳統 JMS / AMQP / RabbitMQ / ActiveMQ','Amazon MQ','Managed message broker，適合 legacy migration']
 ]},
@@ -97,7 +101,9 @@ const groups = [
 ['文件 / 圖片擷取文字','Amazon Textract','OCR + 表格 / 表單欄位擷取'],
 ['文字情緒、實體、自然語言分析','Amazon Comprehend','NLP'],
 ['圖片 / 影片物件、人臉分析','Amazon Rekognition','Computer vision'],
-['機器學習模型訓練與部署','Amazon SageMaker','Managed ML platform']
+['機器學習模型訓練與部署','Amazon SageMaker','Managed ML platform'],
+['BI 儀表板 / 商業智慧 / 視覺化報表','Amazon QuickSight','Serverless BI；連接 AWS / 外部資料來源做 dashboard'],
+['GraphQL API、前端即時同步 / Offline sync','AWS AppSync','Managed GraphQL；可整合 DynamoDB / Lambda，支援即時訂閱']
 ]},
 {cat:'網路、VPC 與全球服務',rows:[
 ['VPC 私人連 API Gateway / KMS / SQS / SNS','Interface VPC Endpoint','AWS PrivateLink；建立 ENI 私有 IP'],
@@ -122,12 +128,16 @@ const groups = [
 ['HTTP/HTTPS、Path/Host routing','Application Load Balancer (ALB)','Layer 7；適合 Web / microservices'],
 ['TCP/UDP、超高效能、固定 IP','Network Load Balancer (NLB)','Layer 4；低延遲、高吞吐'],
 ['EC2 隨流量自動增減','EC2 Auto Scaling','水平擴展；搭配 ELB'],
+['同一使用者要固定送到同一台後端','Sticky Sessions (Session Affinity)','ELB 以 cookie 維持黏著；常見於 ALB，避免 session 換機器'],
 ['容器、AWS 原生編排','Amazon ECS','Managed container orchestration'],
 ['Kubernetes','Amazon EKS','Managed Kubernetes control plane'],
 ['容器不想管理 EC2','AWS Fargate','Serverless compute for ECS/EKS'],
 ['簡單部署 Web App、不想管底層','AWS Elastic Beanstalk','PaaS；自動處理 EC2/ALB/ASG 等'],
 ['批次運算、排程大量 Job','AWS Batch','Managed batch compute'],
 ['Docker image repository','Amazon ECR','Managed container registry']
+]},
+{cat:'成本管理',rows:[
+['設定預算 / 超支告警 / 成本或用量門檻','AWS Budgets','設定 Cost / Usage / RI / Savings Plans 預算並發送告警']
 ]},
 {cat:'安全、身分與治理',rows:[
 ['加密金鑰、Customer managed key','AWS KMS','建立、管理、控制加解密金鑰'],
