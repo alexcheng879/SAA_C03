@@ -15,7 +15,7 @@
     .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 18px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px}.stat strong{display:block;font-size:24px;color:var(--accent)}.stat span{color:var(--muted);font-size:14px}
     .section{margin:26px 0}.section h2{margin:0 0 12px;font-size:22px}.section h2 span{font-size:14px;color:var(--muted);font-weight:500;margin-left:8px}
     .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:top}th{position:sticky;top:0;background:#14243a;text-align:left;color:#dce7f7;font-size:14px}tr:last-child td{border-bottom:0}tr:hover td{background:#12233a}
-    td:nth-child(1){width:43%;font-weight:700}td:nth-child(2){width:25%;color:#9ee8d1;font-weight:800}td:nth-child(3){color:var(--muted)}
+    td:nth-child(1){width:30%;font-weight:700}td:nth-child(2){width:20%;color:#9ee8d1;font-weight:800}td:nth-child(3){width:28%;color:var(--muted)}td:nth-child(4){width:22%;color:#c6d4e8}.exam-note{color:#ffd166;font-weight:800}
     .tag{display:inline-block;font-size:12px;padding:2px 7px;border:1px solid #3c5373;border-radius:999px;color:#b7c7dc;margin-right:6px}.gold{color:var(--warn)}
     .tip{border-left:4px solid var(--accent2);background:#0f2036;border-radius:0 12px 12px 0;padding:14px 16px;color:#dbe7f7;margin-top:18px}.hidden{display:none!important}
     footer{border-top:1px solid var(--line);padding:22px 0 40px;color:var(--muted)}
@@ -26,7 +26,7 @@
 <header class="hero"><div class="wrap">
   <p class="eyebrow">SAA-C03 EXAM CRAM</p>
   <h1>考前關鍵字總整理</h1>
-  <p>依這份題庫的 1,019 題常見情境整理成「看到關鍵字 → 優先想到哪個 AWS 服務」。考試先抓需求，再用關鍵字快速縮小答案。</p>
+  <p>依這份題庫的 1,019 題常見情境整理成「看到關鍵字 → 優先想到哪個 AWS 服務」。這版除了用途，也補上常考判斷與易混淆服務：先抓需求限制，再用排除法縮小答案。</p>
   <nav><a class="navbtn" href="index.html">題庫練習</a><a class="navbtn" href="study.html">學習筆記</a><a class="navbtn active" href="keywords.html">關鍵字總整理</a></nav>
 </div></header>
 <main class="wrap">
@@ -77,7 +77,7 @@ const groups = [
 ['資料倉儲、OLAP、BI 大型分析','Amazon Redshift','Columnar warehouse，分析型工作負載'],
 ['搜尋 Log / 全文搜尋','Amazon OpenSearch Service','搜尋、log analytics、observability'],
 ['圖形資料庫、關係 / 社群 / 推薦 / 路徑查詢','Amazon Neptune','Managed graph database；適合高度互連資料'],
-['不可竄改交易紀錄、完整歷史 / Ledger','Amazon QLDB','Quantum Ledger Database；可驗證、不可變更的交易日誌']
+['不可竄改交易紀錄、完整歷史 / Ledger','Amazon QLDB','Quantum Ledger Database；集中式 ledger DB，保留完整、可驗證、不可竄改的變更歷史。考題看到 audit trail / journal / cryptographically verifiable 優先想到 QLDB']
 ]},
 {cat:'訊息、事件與無伺服器',rows:[
 ['Message Queue、解耦、削峰','Amazon SQS','Producer / consumer 解耦，非同步處理'],
@@ -95,13 +95,15 @@ const groups = [
 ]},
 {cat:'分析與資料處理',rows:[
 ['SQL 查 S3、一次性 / Ad-hoc 查詢','Amazon Athena','Serverless SQL query over S3'],
-['ETL、資料目錄、爬取 schema','AWS Glue','Serverless ETL + Glue Data Catalog'],
+['ETL、資料目錄、Crawler、自動推斷 schema','AWS Glue','Serverless 資料整合服務：Crawler 掃資料並建立 Glue Data Catalog；ETL job 清洗/轉換資料。看到 data catalog / crawler / ETL 常優先想到 Glue'],
 ['大數據 Hadoop / Spark','Amazon EMR','Managed Hadoop ecosystem'],
 ['即時串流分析','Kinesis + analytics consumer','串流事件即時處理/分析'],
 ['文件 / 圖片擷取文字','Amazon Textract','OCR + 表格 / 表單欄位擷取'],
 ['文字情緒、實體、自然語言分析','Amazon Comprehend','NLP'],
 ['圖片 / 影片物件、人臉分析','Amazon Rekognition','Computer vision'],
 ['機器學習模型訓練與部署','Amazon SageMaker','Managed ML platform'],
+['不用寫程式，以視覺化方式清理 / 正規化資料','AWS Glue DataBrew','No-code data preparation；用視覺化 recipe 清洗、轉換、標準化資料，之後可交給分析或 ML 使用'],
+['時間序列資料、IoT 指標、應用程式 metrics','Amazon Timestream','Serverless time-series database；針對 timestamp 資料最佳化，自動分層儲存，常見於 IoT / telemetry / DevOps metrics'],
 ['BI 儀表板 / 商業智慧 / 視覺化報表','Amazon QuickSight','Serverless BI；連接 AWS / 外部資料來源做 dashboard'],
 ['GraphQL API、前端即時同步 / Offline sync','AWS AppSync','Managed GraphQL；可整合 DynamoDB / Lambda，支援即時訂閱']
 ]},
@@ -148,7 +150,7 @@ const groups = [
 ['跨帳號存取 AWS 資源','IAM Role + AssumeRole','不要共享 long-term access key'],
 ['組織層級限制帳號能做什麼','SCP (Service Control Policy)','AWS Organizations guardrail；不直接授權'],
 ['多帳號集中管理','AWS Organizations','OU、consolidated billing、SCP'],
-['快速建立治理良好的多帳號 Landing Zone','AWS Control Tower','Account Factory + guardrails'],
+['多帳號環境要快速建立 Landing Zone、統一治理、持續合規','AWS Control Tower','不只是建立帳號：它在 AWS Organizations 上自動建立 Landing Zone，透過 Account Factory 建帳號，並用 preventive / detective controls（guardrails）持續治理與檢查多帳號環境'],
 ['Web SQL injection / XSS / IP 規則','AWS WAF','Layer 7 Web ACL'],
 ['DDoS 基本防護','AWS Shield Standard','自動包含'],
 ['大型 DDoS、防護支援、成本保障','AWS Shield Advanced','進階 DDoS protection'],
@@ -157,7 +159,8 @@ const groups = [
 ['AWS 資源設定是否合規、設定歷史','AWS Config','Configuration history + rules'],
 ['誰在什麼時間呼叫哪個 AWS API','AWS CloudTrail','API audit trail'],
 ['集中安全告警 / findings','AWS Security Hub','彙整多安全服務 findings'],
-['憑證 SSL/TLS 自動管理','AWS Certificate Manager (ACM)','Public certificate 搭配 ALB/CloudFront/API Gateway']
+['憑證 SSL/TLS 自動管理','AWS Certificate Manager (ACM)','Public certificate 搭配 ALB/CloudFront/API Gateway'],
+['整個 AWS 帳號做最佳實務檢查：成本、效能、安全、容錯、Service Limits','AWS Trusted Advisor','提供 AWS 最佳實務建議與檢查；不是即時監控服務。考題看到 cost optimization / security gaps / fault tolerance recommendations 優先想到 Trusted Advisor']
 ]},
 {cat:'監控、備份與災難復原',rows:[
 ['CPU、指標、Log、Alarm','Amazon CloudWatch','Metrics / Logs / Alarms / dashboards'],
@@ -170,11 +173,14 @@ const groups = [
 ]},
 {cat:'遷移與資料傳輸',rows:[
 ['資料庫遷移、盡量不停機','AWS DMS','持續複寫 CDC；同質/異質 DB migration'],
-['異質資料庫 schema 轉換','AWS SCT','Schema Conversion Tool；常搭 DMS'],
+['異質資料庫 schema / SQL 物件要轉換','AWS SCT','Schema Conversion Tool；轉 schema、view、stored procedure 等，常與 DMS 搭配：SCT 轉結構，DMS 搬資料'],
 ['大量本地檔案線上傳 AWS','AWS DataSync','Agent + managed transfer；NFS/SMB 到 S3/EFS/FSx'],
-['大量資料、網路太慢、TB/PB 離線搬遷','AWS Snowball Edge','實體設備寄送資料'],
+['大量資料、網路太慢、TB/PB 離線搬遷','AWS Snowball Edge','AWS 寄送實體裝置到現場，將資料複製進裝置再寄回 AWS；也可在邊緣環境做有限運算。題目重點是「離線搬資料 + Snowball 實體設備」'],
 ['SFTP/FTPS/FTP 直接進 S3/EFS','AWS Transfer Family','Managed file transfer endpoints'],
-['VMware / 實體主機 Lift-and-shift 到 EC2','AWS Application Migration Service (MGN)','Server migration / rehost']
+['VMware / 實體主機 Lift-and-shift 到 EC2','AWS Application Migration Service (MGN)','Server migration / rehost'],
+['要追蹤多個 AWS 遷移工具 / 應用程式的遷移進度','AWS Migration Hub','集中 dashboard 追蹤 application migration 狀態；重點是「追蹤與管理進度」，不是自己搬資料'],
+['遷移前先盤點本地伺服器、相依性、CPU/記憶體使用狀況','AWS Application Discovery Service','蒐集 on-prem servers 的設定、使用率與 dependency，協助 migration planning；常與 Migration Hub 搭配'],
+['超大規模 EB 級資料搬遷、整台貨櫃車運資料','AWS Snowmobile','Exabyte 級離線資料遷移；比 Snowball Edge 大很多，題目若是數十 PB / EB 級超大量資料可優先想到 Snowmobile']
 ]},
 {cat:'架構選擇速記',rows:[
 ['最少營運開銷、免管 Server','Serverless / Fully Managed','Lambda、Fargate、DynamoDB、Athena 等優先評估'],
@@ -191,12 +197,147 @@ const groups = [
 ]}
 ];
 
+const examTraps = {
+'S3 Transfer Acceleration':'不是 CloudFront 快取內容；它是加速「把資料傳進/傳出 S3」。',
+'S3 Multipart Upload':'重點是大檔分段與失敗重傳；不是跨國加速。',
+'S3 Cross-Region Replication (CRR)':'要跨 Region；通常需開 Versioning。不是備份排程工具。',
+'S3 Same-Region Replication (SRR)':'同 Region 複製；若題目強調跨區 DR，選 CRR。',
+'S3 Intelligent-Tiering':'不知道存取模式才最適合；已知長期幾乎不讀則 Glacier 通常更省。',
+'S3 Standard-IA / One Zone-IA':'IA 仍是毫秒存取；Glacier 是封存，取回較慢。',
+'S3 Glacier Deep Archive':'最便宜但取回最慢；要求立即/毫秒讀取就排除。',
+'CloudFront + S3':'CloudFront 是 CDN；不是固定 Anycast IP 的 Global Accelerator。',
+'S3 Block Public Access':'阻擋公開，不等於加密。',
+'S3 Versioning':'防誤刪/回復舊版；若要求 WORM 法規不可改，選 Object Lock。',
+'S3 Object Lock':'WORM/法規保留；通常需 Versioning。',
+'Amazon Macie':'專找 S3 敏感資料；不是一般威脅偵測 GuardDuty。',
+'Amazon EFS':'Linux/NFS 多台共享；單一 EC2 block disk 是 EBS。',
+'Amazon FSx for Windows File Server':'Windows/SMB/AD；Linux NFS 多半看 EFS。',
+'Amazon FSx for Lustre':'HPC、高吞吐平行 I/O；不是一般共享家目錄首選。',
+'AWS Storage Gateway - File Gateway':'本地 NFS/SMB 介面，後端 S3；屬混合雲。',
+'Storage Gateway - Volume Gateway':'iSCSI block；不是 NFS/SMB。',
+'Storage Gateway - Tape Gateway':'VTL/備份軟體；題目有 tape 就很明顯。',
+'S3 Storage Lens':'看 S3 使用/趨勢/最佳化；不是搬資料工具。',
+'Amazon RDS':'關聯式 SQL；若要 key-value 超高擴展通常是 DynamoDB。',
+'RDS Multi-AZ':'HA/故障轉移，不用來分攤讀流量。',
+'RDS Read Replica':'讀取擴展，非同步；HA 題通常先看 Multi-AZ。',
+'Amazon Aurora':'關聯式 DB，不是 key-value；MySQL/PostgreSQL 相容。',
+'Aurora Serverless':'容量自動伸縮；不是代表完全沒有資料庫概念。',
+'Aurora Global Database':'跨 Region 讀取/DR；單 Region HA 看 Multi-AZ 架構。',
+'Amazon DynamoDB':'NoSQL key-value/document；不是關聯式 JOIN DB。',
+'DAX':'只加速 DynamoDB 讀取；不是通用 Redis cache。',
+'DynamoDB Global Tables':'多 Region multi-active；單區高可用 DynamoDB 本身已跨 AZ。',
+'Amazon ElastiCache':'通用 cache/session；DynamoDB 專用微秒快取是 DAX。',
+'ElastiCache for Redis / Valkey':'可做複雜資料型態/持久化；Memcached 較簡單。',
+'Amazon Redshift':'OLAP/warehouse；不是交易型 OLTP DB。',
+'Amazon OpenSearch Service':'全文搜尋/log analytics；不是主要關聯式資料庫。',
+'Amazon Neptune':'Graph DB；關係路徑/社交網路，非一般 SQL。',
+'Amazon QLDB':'集中式可驗證 ledger；不是 blockchain 多方去中心化網路。',
+'Amazon SQS':'Queue 解耦，一則訊息通常由一個 consumer 處理；廣播看 SNS。',
+'SQS Standard':'高吞吐、at-least-once；需要嚴格順序改 FIFO。',
+'SQS FIFO':'順序+去重；吞吐模式與 Standard 不同。',
+'Amazon SNS':'Push pub/sub 廣播；需要排隊緩衝通常 SNS → SQS。',
+'SNS FIFO Topic':'要 FIFO 訂閱端也需符合 FIFO 使用情境。',
+'Amazon EventBridge':'依事件規則路由；不是拿來長時間保存 queue backlog。',
+'AWS Step Functions':'編排多步驟 workflow；不是單一函式運算。',
+'AWS Lambda':'事件驅動短任務；長時間/特殊 runtime 可看 ECS/Fargate。',
+'Amazon Kinesis Data Streams':'即時串流且可多 consumer；不是傳統工作 queue。',
+'Amazon Kinesis':'看到 real-time streaming 先想到 Kinesis 家族，再判斷 Streams/Firehose。',
+'Amazon Data Firehose':'幫你把串流資料「送到目的地」；不像 Data Streams 要自行管理 consumer。',
+'Amazon MQ':'Legacy broker 相容性是關鍵；雲原生解耦優先 SQS/SNS。',
+'Amazon Athena':'直接 SQL 查 S3；不是 ETL 引擎，也不用建 cluster。',
+'AWS Glue':'Crawler/Data Catalog/ETL；Ad-hoc SQL 查 S3 是 Athena。',
+'Amazon EMR':'Hadoop/Spark 大數據叢集；少量 serverless SQL 不必用 EMR。',
+'AWS Glue DataBrew':'重點是 no-code data preparation；寫程式 ETL/大型 pipeline 看 Glue。',
+'Amazon Timestream':'時間序列專用；一般關聯交易資料不是它。',
+'Amazon Textract':'文件 OCR + 表格/表單；一般圖片辨識看 Rekognition。',
+'Amazon Comprehend':'文字 NLP；語音轉文字是 Transcribe。',
+'Amazon Rekognition':'影像/影片辨識；文字文件 OCR 看 Textract。',
+'Amazon SageMaker':'ML 全生命週期；不是一般 BI dashboard。',
+'Amazon QuickSight':'BI 視覺化；不是 ETL/資料搬遷。',
+'AWS AppSync':'Managed GraphQL + subscription/offline sync；REST API 題多看 API Gateway。',
+'Interface VPC Endpoint':'PrivateLink/ENI；多數 AWS 服務私連走它。',
+'Gateway Endpoint':'考試高頻：只要 S3 / DynamoDB 私連，先想到 Gateway Endpoint。',
+'AWS PrivateLink':'私有服務連線，不需 VPC peering；provider 常搭 NLB。',
+'VPC Peering':'不支援 transitive routing；很多 VPC 時看 Transit Gateway。',
+'AWS Transit Gateway':'大量 VPC/on-prem hub-and-spoke；不是單純兩 VPC 最輕量方案。',
+'NAT Gateway':'private subnet 主動出網；外部不能藉 NAT 主動連進 private instance。',
+'Internet Gateway':'讓 public subnet 與 Internet 溝通；不是 API Gateway。',
+'Site-to-Site VPN':'快、加密但走公網；穩定專線看 Direct Connect。',
+'AWS Direct Connect':'專線但預設不代表加密；需加密可 DX + VPN。',
+'Direct Connect + VPN':'同時要專線穩定與 IPsec 加密時常選。',
+'AWS Global Accelerator':'固定 Anycast IP + TCP/UDP + backbone；不是內容快取。',
+'Amazon CloudFront':'CDN/cache；固定 IP 或非 HTTP/TCP-UDP 加速題看 Global Accelerator。',
+'Amazon Route 53':'DNS 決策；不傳輸你的應用資料內容。',
+'Route 53 Geolocation':'依地理位置，不是量測延遲。',
+'Route 53 Latency-based Routing':'依 AWS 測得延遲導流，不是固定比例。',
+'Route 53 Failover Routing':'主備切換；通常搭 health check。',
+'Route 53 Weighted Routing':'按比例分流，常用 A/B、藍綠。',
+'Application Load Balancer (ALB)':'L7 HTTP/HTTPS；path/host routing。',
+'Network Load Balancer (NLB)':'L4 TCP/UDP、高效能、固定 IP；不做 path routing。',
+'EC2 Auto Scaling':'增減 EC2 數量；ELB 是分流，兩者常一起出現。',
+'Sticky Sessions (Session Affinity)':'靠 LB cookie 黏著；更好的無狀態設計常把 session 放外部 cache。',
+'Amazon ECS':'AWS 原生容器編排；需要 Kubernetes API 生態才看 EKS。',
+'Amazon EKS':'Managed Kubernetes control plane；仍需規劃 worker/Fargate。',
+'AWS Fargate':'免管 EC2 worker；它是 compute engine，不是完整 orchestration。',
+'AWS Elastic Beanstalk':'快速 PaaS 部署應用；底層仍可能幫你建 EC2/ALB/ASG。',
+'AWS Batch':'排程/批次 Job；不是長駐 Web service。',
+'Amazon ECR':'容器映像倉庫；不是執行容器的地方。',
+'AWS Budgets':'預算門檻與告警；不是即時阻止花費的硬上限。',
+'AWS KMS':'管理加密金鑰；secret 內容/輪替本身看 Secrets Manager。',
+'AWS Secrets Manager':'密碼/credential + rotation；一般設定值可用 Parameter Store。',
+'SSM Parameter Store':'設定與 SecureString；自動輪替能力不如 Secrets Manager。',
+'Amazon Cognito':'App 使用者身分；AWS 管理者權限仍是 IAM。',
+'AWS IAM':'單一帳號身分/權限；多帳號組織治理看 Organizations/Control Tower。',
+'IAM Role + AssumeRole':'跨帳號短期憑證；避免分享 access key。',
+'SCP (Service Control Policy)':'是 permission boundary/guardrail，不直接 grant 權限。',
+'AWS Organizations':'組織/OU/SCP/合併帳單；自動化 Landing Zone 治理看 Control Tower。',
+'AWS Control Tower':'Control Tower = 多帳號 Landing Zone + Account Factory + controls；Organizations 是底層，多數題若強調「快速建立標準化多帳號治理」選 Control Tower。',
+'AWS WAF':'L7 Web 攻擊規則；大規模 DDoS 專門防護看 Shield。',
+'AWS Shield Standard':'基本 DDoS 自動保護；進階支援/成本保障看 Advanced。',
+'AWS Shield Advanced':'進階 DDoS；不是 SQLi/XSS 規則引擎。',
+'Amazon GuardDuty':'威脅偵測；不是 vulnerability scanner。',
+'Amazon Inspector':'漏洞/CVE 掃描；可疑行為偵測看 GuardDuty。',
+'AWS Config':'看資源設定與合規；誰呼叫 API 看 CloudTrail。',
+'AWS CloudTrail':'API audit；效能 metrics/log dashboard 看 CloudWatch。',
+'AWS Security Hub':'彙整 findings；不是自己取代所有掃描/偵測服務。',
+'AWS Certificate Manager (ACM)':'TLS 憑證生命週期；不是加密資料金鑰 KMS。',
+'AWS Trusted Advisor':'最佳實務「建議/檢查」；CloudWatch 是監控指標，Config 是設定合規。',
+'Amazon CloudWatch':'metrics/logs/alarms；API 誰做了什麼看 CloudTrail。',
+'EventBridge / CloudWatch Alarm':'EventBridge 偏事件規則；Alarm 偏 metric threshold。',
+'AWS Backup':'集中備份政策；DR 架構本身仍要看 RTO/RPO。',
+'Multi-site Active/Active':'RTO/RPO 最低、成本最高。',
+'Warm Standby':'縮小版完整環境常駐；比 Pilot Light 快恢復。',
+'Pilot Light':'只維持核心元件；災難時再啟動/擴展其餘服務。',
+'Backup & Restore':'成本最低、RTO 通常最長。',
+'AWS DMS':'搬「資料」且可 CDC；異質 schema 轉換常搭 SCT。',
+'AWS SCT':'SCT 轉 schema/DB objects；DMS 搬資料。',
+'AWS DataSync':'線上大量檔案傳輸；網路不夠或離線搬遷看 Snowball。',
+'AWS Snowball Edge':'TB/PB 級離線設備；更誇張 EB 級看 Snowmobile。',
+'AWS Transfer Family':'SFTP/FTPS/FTP 入口；不是一般檔案同步 DataSync。',
+'AWS Application Migration Service (MGN)':'rehost server；不是 DB migration 的 DMS。',
+'AWS Migration Hub':'是「集中追蹤遷移進度」，不是資料搬運引擎。',
+'AWS Application Discovery Service':'遷移前盤點/依賴探索；不是實際搬 server。',
+'AWS Snowmobile':'超大規模 EB 級；一般 TB/PB 題多半 Snowball Edge。',
+'Serverless / Fully Managed':'題目若強調 least operational overhead，通常是高權重線索。',
+'Multi-AZ':'同 Region 跨 AZ 高可用；跨 Region 是另一層 DR。',
+'Cache / Read Replica':'cache 更快但有一致性考量；replica 是 DB 複寫讀取。',
+'SQS Buffer':'吸收 spike、解耦；不是單純通知廣播。',
+'SNS Fan-out':'一對多；常見標準答案是 SNS topic → 多個 SQS queues。',
+'FIFO':'看到 ordering / dedup 就要提高 FIFO 優先級。',
+'EventBridge':'事件規則/路由；不是 durable queue backlog。',
+'CloudFront':'全球內容分發/快取。',
+'Global Accelerator':'全球網路加速/固定 IP，不做 CDN cache。',
+'Gateway Endpoint':'S3/DynamoDB 的高頻考點。',
+'Interface Endpoint':'API Gateway 私有存取使用 Interface VPC Endpoint。'
+};
+function trapFor(service){return examTraps[service] || '先抓題目的限制條件（HA、成本、效能、私有連線、少維運），再和相近服務做排除。';}
+
 const sections=document.getElementById('sections'), chips=document.getElementById('chips'), search=document.getElementById('search'), visibleCount=document.getElementById('visibleCount');
 let active='全部';
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function renderChips(){['全部',...groups.map(g=>g.cat)].forEach(c=>{const b=document.createElement('button');b.className='chip'+(c===active?' active':'');b.textContent=c;b.onclick=()=>{active=c;renderChips();render()};chips.appendChild(b)});}
 function renderChips(){chips.innerHTML='';['全部',...groups.map(g=>g.cat)].forEach(c=>{const b=document.createElement('button');b.className='chip'+(c===active?' active':'');b.textContent=c;b.onclick=()=>{active=c;renderChips();render()};chips.appendChild(b)});}
-function render(){const q=search.value.trim().toLowerCase();sections.innerHTML='';let count=0;groups.forEach(g=>{if(active!=='全部'&&g.cat!==active)return;const rows=g.rows.filter(r=>!q||r.join(' ').toLowerCase().includes(q));if(!rows.length)return;count+=rows.length;const sec=document.createElement('section');sec.className='section';sec.innerHTML=`<h2>${esc(g.cat)} <span>${rows.length} 條</span></h2><div class="table-wrap"><table><thead><tr><th>看到關鍵字 / 情境</th><th>優先想到</th><th>考試速記</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td></tr>`).join('')}</tbody></table></div>`;sections.appendChild(sec)});visibleCount.textContent=count;}
+function render(){const q=search.value.trim().toLowerCase();sections.innerHTML='';let count=0;groups.forEach(g=>{if(active!=='全部'&&g.cat!==active)return;const rows=g.rows.filter(r=>!q||r.join(' ').toLowerCase().includes(q));if(!rows.length)return;count+=rows.length;const sec=document.createElement('section');sec.className='section';sec.innerHTML=`<h2>${esc(g.cat)} <span>${rows.length} 條</span></h2><div class="table-wrap"><table><thead><tr><th>看到關鍵字 / 情境</th><th>優先想到</th><th>考試速記</th><th>常見陷阱 / 排除法</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td><span class="exam-note">考點：</span>${esc(trapFor(r[1]))}</td></tr>`).join('')}</tbody></table></div>`;sections.appendChild(sec)});visibleCount.textContent=count;}
 search.addEventListener('input',render);renderChips();render();
 </script>
 </body></html>
