@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑小萬高壓備餐產線系統</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f9;
+            --card-bg: #ffffff;
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --cart-color: #e67e22;
+            --done-color: #27ae60;
+            --text-color: #333333;
+            --border-radius: 8px;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { text-align: center; color: var(--primary-color); margin-bottom: 20px; }
+        
+        /* 頁籤設計 */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            background: #e0e0e0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        .tab-btn {
+            flex: 1; padding: 12px; text-align: center; background: none;
+            border: none; font-size: 1.1em; font-weight: bold; color: #666;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .tab-btn.active { background: var(--primary-color); color: white; }
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+        
+        /* 區塊共用樣式 */
+        .week-section {
+            background: var(--card-bg); border-radius: var(--border-radius);
+            padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        /* 採購清單面板 (新增) */
+        #shopping-cart-panel {
+            border: 2px solid var(--cart-color);
+            background-color: #fff9f5;
+            display: none; /* 預設隱藏，有勾選才顯示 */
+        }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cart-title { color: var(--cart-color); margin: 0; font-size: 1.2em; font-weight: bold; }
+        .clear-cart-btn {
+            background: none; border: 1px solid #ccc; padding: 4px 10px;
+            border-radius: 4px; cursor: pointer; font-size: 0.9em;
+        }
+        .cart-category { margin-bottom: 8px; font-size: 1em; }
+        .cart-category strong { color: var(--primary-color); background: #eee; padding: 2px 8px; border-radius: 4px; margin-right: 8px; }
+
+        /* 備餐產線樣式 */
+        .week-header {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px;
+        }
+        .week-title { color: var(--accent-color); margin: 0; font-size: 1.2em; }
+        .mini-btn {
+            background: #fff3e0; color: #d35400; border: 1px solid #f39c12;
+            padding: 4px 10px; border-radius: 15px; font-size: 0.85em;
+            cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .mini-btn:hover { background: #ffe0b2; }
+
+        .recipe-list { list-style: none; padding: 0; margin: 0; }
+        .recipe-item {
+            display: flex; align-items: flex-start; padding: 12px 0;
+            border-bottom: 1px dashed #e0e0e0; transition: background 0.2s;
+        }
+        .recipe-item:last-child { border-bottom: none; }
+        
+        /* 雙重勾選框設計 (新增) */
+        .action-group {
+            display: flex; gap: 12px; margin-right: 15px;
+            padding-top: 2px;
+        }
+        .custom-checkbox {
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; font-size: 0.8em; color: #7f8c8d; user-select: none;
+        }
+        .custom-checkbox input {
+            width: 20px; height: 20px; margin-bottom: 3px; cursor: pointer;
+        }
+        .cart-box { accent-color: var(--cart-color); }
+        .done-box { accent-color: var(--done-color); }
+
+        .recipe-content { flex-grow: 1; }
+        .recipe-name { font-weight: bold; font-size: 1.1em; margin-bottom: 4px; transition: color 0.3s; }
+        .recipe-meta { font-size: 0.9em; color: #666; }
+        .tag {
+            display: inline-block; padding: 2px 8px; border-radius: 12px;
+            font-size: 0.8em; margin-right: 8px; font-weight: bold;
+        }
+        .tag-chill { background-color: #e8f4fd; color: #2980b9; }
+        .tag-freeze { background-color: #f0fdf4; color: #27ae60; }
+        
+        /* 煮完打勾的狀態 */
+        .recipe-item.is-done .recipe-name { color: #999; text-decoration: line-through; }
+        
+        .progress-bar { background-color: #e0e0e0; height: 8px; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+        .progress-fill { background-color: var(--done-color); height: 100%; width: 0%; transition: width 0.3s; }
+
+        /* 食材盤點樣式 */
+        .ingredient-group { margin-bottom: 15px; }
+        .ingredient-group-title { font-size: 1em; color: #555; margin-bottom: 8px; font-weight: bold; }
+        .ingredient-tag {
+            display: inline-block; padding: 6px 12px; margin: 0 6px 8px 0;
+            background: #fff; border: 1px solid #ccc; border-radius: 20px;
+            cursor: pointer; font-size: 0.9em; transition: all 0.2s; user-select: none;
+        }
+        .ingredient-tag.selected { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+        #match-results { margin-top: 20px; }
+        .match-card {
+            background: white; padding: 15px; border-radius: var(--border-radius);
+            margin-bottom: 10px; border-left: 4px solid var(--accent-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .match-score {
+            font-size: 0.8em; color: #e74c3c; font-weight: bold;
+            margin-bottom: 5px; display: inline-block; background: #fdf2f0;
+            padding: 2px 6px; border-radius: 4px;
+        }
+        .empty-state { text-align: center; color: #888; padding: 30px; background: white; border-radius: var(--border-radius); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>黑小萬備餐產線系統</h1>
+    
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('pipeline')">📅 備餐產線 (含採購)</button>
+        <button class="tab-btn" onclick="switchTab('matcher')">🔍 食材盤點 (剩食)</button>
+    </div>
+
+    <!-- 視圖 1: 備餐產線 -->
+    <div id="pipeline-view" class="view-section active">
+        
+        <!-- 動態採購清單面板 -->
+        <div id="shopping-cart-panel" class="week-section">
+            <div class="cart-header">
+                <h2 class="cart-title">🛒 本週採購整合清單</h2>
+                <button class="clear-cart-btn" onclick="clearCart()">清空採買勾選</button>
+            </div>
+            <div id="cart-content"></div>
+        </div>
+
+        <div id="app"></div>
+    </div>
+
+    <!-- 視圖 2: 食材盤點 -->
+    <div id="matcher-view" class="view-section">
+        <div class="week-section">
+            <h2 class="week-title" style="border-bottom: 1px solid #eee; padding-bottom: 10px;">點選冰箱剩下的食材</h2>
+            <div id="ingredients-container"></div>
+        </div>
+        <div id="match-results">
+            <div class="empty-state">請上方點選食材，系統將為你匹配適合的料理。</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 資料庫
+const pipelineData = [
+    {
+        week: "第一週",
+        recipes: [
+            { id: "w1-1", name: "味噌鮭魚根莖湯", type: "chill", typeLabel: "冷藏消耗", details: "鮭魚塊、紅白蘿蔔丁、嫩豆腐", ingredients: ["鮭魚", "紅蘿蔔", "白蘿蔔", "豆腐"] },
+            { id: "w1-2", name: "番茄無水燉牛肉", type: "chill", typeLabel: "冷藏消耗", details: "牛肋條、番茄塊、洋蔥、紅蘿蔔", ingredients: ["牛肉", "番茄", "洋蔥", "紅蘿蔔"] },
+            { id: "w1-3", name: "雙菇玉米筍燉牛肉", type: "freeze", typeLabel: "冷凍冰磚", details: "牛絞肉、雪白菇/金針菇/玉米筍", ingredients: ["牛肉", "菇類", "玉米筍"] },
+            { id: "w1-4", name: "南瓜奶香雞腿燉飯", type: "freeze", typeLabel: "冷凍冰磚", details: "去骨雞腿丁、南瓜塊、鮮奶", ingredients: ["雞肉", "南瓜", "鮮奶"] },
+            { id: "w1-5", name: "玉米牛奶洋蔥燉雞", type: "freeze", typeLabel: "冷凍冰磚", details: "雞胸肉丁、玉米粒、洋蔥碎", ingredients: ["雞肉", "玉米粒", "洋蔥", "鮮奶"] }
+        ]
+    },
+    {
+        week: "第二週",
+        recipes: [
+            { id: "w2-1", name: "番茄豆腐滑肉煲", type: "chill", typeLabel: "冷藏消耗", details: "豬里肌碎、番茄塊、嫩豆腐、雞蛋", ingredients: ["豬肉", "番茄", "豆腐", "雞蛋"] },
+            { id: "w2-2", name: "蘋果洋蔥燉梅花豬", type: "chill", typeLabel: "冷藏消耗", details: "梅花豬塊、蘋果塊、洋蔥塊", ingredients: ["豬肉", "蘋果", "洋蔥"] },
+            { id: "w2-3", name: "滷肉燥與滷紅蘿蔔", type: "freeze", typeLabel: "冷凍冰磚", details: "豬絞肉、紅蘿蔔丁、水煮蛋", ingredients: ["豬肉", "紅蘿蔔", "雞蛋"] },
+            { id: "w2-4", name: "地瓜毛豆燉豬軟骨", type: "freeze", typeLabel: "冷凍冰磚", details: "豬軟骨排、黃地瓜塊、毛豆仁", ingredients: ["豬肉", "地瓜", "毛豆"] },
+            { id: "w2-5", name: "茄汁鯖魚燉洋蔥", type: "freeze", typeLabel: "冷凍冰磚", details: "無刺鯖魚塊、番茄碎、洋蔥碎", ingredients: ["鯖魚", "番茄", "洋蔥"] }
+        ]
+    },
+    {
+        week: "第三週",
+        recipes: [
+            { id: "w3-1", name: "香菇鱈魚豆腐炊飯", type: "chill", typeLabel: "冷藏消耗", details: "鱈魚片、鮮香菇碎、嫩豆腐丁", ingredients: ["鱈魚", "菇類", "豆腐"] },
+            { id: "w3-2", name: "番茄肉醬洋芋泥", type: "chill", typeLabel: "冷藏消耗", details: "牛豬絞肉、番茄塊、馬鈴薯", ingredients: ["牛肉", "豬肉", "番茄", "馬鈴薯"] },
+            { id: "w3-3", name: "蘿蔔牛腩咖哩 (無辣)", type: "freeze", typeLabel: "冷凍冰磚", details: "牛腩塊、紅蘿蔔丁、馬鈴薯、蘋果泥", ingredients: ["牛肉", "紅蘿蔔", "馬鈴薯", "蘋果"] },
+            { id: "w3-4", name: "芋頭香菇肉末粥", type: "freeze", typeLabel: "冷凍冰磚", details: "豬絞肉、芋頭塊、乾香菇碎", ingredients: ["豬肉", "芋頭", "菇類"] },
+            { id: "w3-5", name: "栗子香菇燒雞", type: "freeze", typeLabel: "冷凍冰磚", details: "雞腿肉丁、生鮮栗子、鮮香菇、紅蘿蔔", ingredients: ["雞肉", "栗子", "菇類", "紅蘿蔔"] }
+        ]
+    },
+    {
+        week: "第四週",
+        recipes: [
+            { id: "w4-1", name: "櫛瓜蛤蜊去骨排骨湯", type: "chill", typeLabel: "冷藏消耗", details: "豬軟骨排、去皮櫛瓜、蛤蜊", ingredients: ["豬肉", "櫛瓜", "蛤蜊"] },
+            { id: "w4-2", name: "雙層玉米筍蒸肉餅", type: "chill", typeLabel: "冷藏消耗", details: "豬絞肉、玉米筍薄片、雞蛋", ingredients: ["豬肉", "玉米筍", "雞蛋"] },
+            { id: "w4-3", name: "鮭魚鴻禧菇炊飯", type: "freeze", typeLabel: "冷凍冰磚", details: "鮭魚菲力、鴻禧菇碎、玉米筍碎", ingredients: ["鮭魚", "菇類", "玉米筍"] },
+            { id: "w4-4", name: "南瓜起司豬肉濃湯", type: "freeze", typeLabel: "冷凍冰磚", details: "豬絞肉、南瓜塊、鮮奶/起司", ingredients: ["豬肉", "南瓜", "鮮奶", "起司"] },
+            { id: "w4-5", name: "奶油蘑菇雞肉燉飯", type: "freeze", typeLabel: "冷凍冰磚", details: "雞腿肉碎、蘑菇碎、洋蔥碎", ingredients: ["雞肉", "菇類", "洋蔥"] }
+        ]
+    }
+];
+
+// 食材分類庫
+const ingredientCategories = {
+    "蛋白質主力": ["牛肉", "豬肉", "雞肉", "鮭魚", "鱈魚", "鯖魚", "蛤蜊", "雞蛋", "豆腐"],
+    "根莖瓜果": ["番茄", "紅蘿蔔", "白蘿蔔", "洋蔥", "馬鈴薯", "地瓜", "南瓜", "芋頭", "櫛瓜", "蘋果"],
+    "配菜與其他": ["菇類", "玉米筍", "玉米粒", "毛豆", "栗子", "鮮奶", "起司"]
+};
+
+const appContainer = document.getElementById('app');
+const cartPanel = document.getElementById('shopping-cart-panel');
+const cartContent = document.getElementById('cart-content');
+
+// 頁籤切換
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById(tabId + '-view').classList.add('active');
+}
+
+// ---------------- 模組 1: 備餐產線與購物車渲染 ----------------
+function renderPipeline() {
+    appContainer.innerHTML = '';
+    pipelineData.forEach((weekData, weekIndex) => {
+        const weekSection = document.createElement('div');
+        weekSection.className = 'week-section';
+        
+        // 標題與快捷按鈕
+        const header = document.createElement('div');
+        header.className = 'week-header';
+        header.innerHTML = `
+            <h2 class="week-title">${weekData.week}</h2>
+            <button class="mini-btn" onclick="selectAllCart(${weekIndex})">🛒 全選本週</button>
+        `;
+        
+        // 進度條
+        const progressBarContainer = document.createElement('div');
+        progressBarContainer.className = 'progress-bar';
+        const progressFill = document.createElement('div');
+        progressFill.className = 'progress-fill';
+        progressFill.id = `progress-${weekIndex}`;
+        progressBarContainer.appendChild(progressFill);
+        
+        // 列表
+        const recipeList = document.createElement('ul');
+        recipeList.className = 'recipe-list';
+        
+        weekData.recipes.forEach(recipe => {
+            const isCart = localStorage.getItem(`cart_${recipe.id}`) === 'true';
+            const isDone = localStorage.getItem(`done_${recipe.id}`) === 'true';
+            
+            const li = document.createElement('li');
+            li.className = `recipe-item ${isDone ? 'is-done' : ''}`;
+            const tagClass = recipe.type === 'chill' ? 'tag-chill' : 'tag-freeze';
+            
+            li.innerHTML = `
+                <div class="action-group">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" class="cart-box" data-id="${recipe.id}" ${isCart ? 'checked' : ''}>
+                        <span>買</span>
+                    </label>
+                    <label class="custom-checkbox">
+                        <input type="checkbox" class="done-box" data-id="${recipe.id}" ${isDone ? 'checked' : ''}>
+                        <span>煮</span>
+                    </label>
+                </div>
+                <div class="recipe-content">
+                    <div class="recipe-name">${recipe.name}</div>
+                    <div class="recipe-meta">
+                        <span class="tag ${tagClass}">${recipe.typeLabel}</span>
+                        ${recipe.details}
+                    </div>
+                </div>
+            `;
+            
+            // 綁定購物車事件
+            li.querySelector('.cart-box').addEventListener('change', (e) => {
+                localStorage.setItem(`cart_${recipe.id}`, e.target.checked);
+                renderShoppingCart();
+            });
+            
+            // 綁定完成事件
+            li.querySelector('.done-box').addEventListener('change', (e) => {
+                localStorage.setItem(`done_${recipe.id}`, e.target.checked);
+                if (e.target.checked) li.classList.add('is-done');
+                else li.classList.remove('is-done');
+                updateProgress(weekIndex, weekData.recipes);
+            });
+            
+            recipeList.appendChild(li);
+        });
+        
+        weekSection.appendChild(header);
+        weekSection.appendChild(recipeList);
+        weekSection.appendChild(progressBarContainer);
+        appContainer.appendChild(weekSection);
+        
+        updateProgress(weekIndex, weekData.recipes);
+    });
+    
+    // 初始化時渲染購物車
+    renderShoppingCart();
+}
+
+// 更新進度條
+function updateProgress(weekIndex, recipes) {
+    let completed = 0;
+    recipes.forEach(recipe => {
+        if (localStorage.getItem(`done_${recipe.id}`) === 'true') completed++;
+    });
+    const percentage = (completed / recipes.length) * 100;
+    document.getElementById(`progress-${weekIndex}`).style.width = `${percentage}%`;
+}
+
+// 本週全選購物車
+function selectAllCart(weekIndex) {
+    const recipes = pipelineData[weekIndex].recipes;
+    recipes.forEach(recipe => {
+        localStorage.setItem(`cart_${recipe.id}`, 'true');
+    });
+    renderPipeline(); // 重新渲染更新打勾狀態
+}
+
+// 清空購物車
+function clearCart() {
+    pipelineData.forEach(week => {
+        week.recipes.forEach(recipe => {
+            localStorage.removeItem(`cart_${recipe.id}`);
+        });
+    });
+    renderPipeline();
+}
+
+// 渲染採購整合清單邏輯
+function renderShoppingCart() {
+    let hasItems = false;
+    const ingredientCounts = {};
+
+    // 收集勾選的食材
+    pipelineData.forEach(week => {
+        week.recipes.forEach(recipe => {
+            if (localStorage.getItem(`cart_${recipe.id}`) === 'true') {
+                hasItems = true;
+                recipe.ingredients.forEach(ing => {
+                    ingredientCounts[ing] = (ingredientCounts[ing] || 0) + 1;
+                });
+            }
+        });
+    });
+
+    if (!hasItems) {
+        cartPanel.style.display = 'none';
+        return;
+    }
+
+    cartPanel.style.display = 'block';
+
+    // 依照分類庫進行歸類
+    const categorized = { "蛋白質主力": {}, "根莖瓜果": {}, "配菜與其他": {}, "未分類": {} };
+    
+    for (const [ing, count] of Object.entries(ingredientCounts)) {
+        let found = false;
+        for (const [cat, items] of Object.entries(ingredientCategories)) {
+            if (items.includes(ing)) {
+                categorized[cat][ing] = count;
+                found = true;
+                break;
+            }
+        }
+        if (!found) categorized["未分類"][ing] = count;
+    }
+
+    // 產生 HTML
+    let html = '';
+    for (const [cat, itemsObj] of Object.entries(categorized)) {
+        const entries = Object.entries(itemsObj);
+        if (entries.length > 0) {
+            html += `<div class="cart-category"><strong>${cat}</strong> `;
+            const itemStrings = entries.map(([name, qty]) => qty > 1 ? `${name}(x${qty})` : name);
+            html += itemStrings.join('、 ') + `</div>`;
+        }
+    }
+    
+    cartContent.innerHTML = html;
+}
+
+// ---------------- 模組 2: 食材盤點引擎 (維持不變) ----------------
+const ingredientsContainer = document.getElementById('ingredients-container');
+const matchResults = document.getElementById('match-results');
+let selectedIngredients = new Set();
+
+function renderIngredientsList() {
+    ingredientsContainer.innerHTML = '';
+    for (const [category, items] of Object.entries(ingredientCategories)) {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'ingredient-group';
+        groupDiv.innerHTML = `<div class="ingredient-group-title">${category}</div>`;
+        items.forEach(item => {
+            const tag = document.createElement('span');
+            tag.className = 'ingredient-tag';
+            tag.innerText = item;
+            tag.onclick = () => toggleIngredient(tag, item);
+            groupDiv.appendChild(tag);
+        });
+        ingredientsContainer.appendChild(groupDiv);
+    }
+}
+
+function toggleIngredient(element, item) {
+    if (selectedIngredients.has(item)) {
+        selectedIngredients.delete(item);
+        element.classList.remove('selected');
+    } else {
+        selectedIngredients.add(item);
+        element.classList.add('selected');
+    }
+    calculateMatches();
+}
+
+function calculateMatches() {
+    if (selectedIngredients.size === 0) {
+        matchResults.innerHTML = '<div class="empty-state">請上方點選食材，系統將為你匹配適合的料理。</div>';
+        return;
+    }
+
+    let allRecipes = [];
+    pipelineData.forEach(week => {
+        week.recipes.forEach(recipe => {
+            let matchCount = 0;
+            recipe.ingredients.forEach(ing => { if (selectedIngredients.has(ing)) matchCount++; });
+            if (matchCount > 0) allRecipes.push({ ...recipe, matchCount: matchCount, totalIng: recipe.ingredients.length });
+        });
+    });
+
+    allRecipes.sort((a, b) => b.matchCount - a.matchCount || a.totalIng - b.totalIng);
+
+    if (allRecipes.length === 0) {
+        matchResults.innerHTML = '<div class="empty-state">目前沒有符合的料理組合，試著點選其他食材吧！</div>';
+        return;
+    }
+
+    matchResults.innerHTML = '';
+    allRecipes.forEach(recipe => {
+        const card = document.createElement('div');
+        card.className = 'match-card';
+        const isReady = recipe.matchCount === recipe.totalIng;
+        const scoreText = isReady ? '✅ 完美匹配 (食材齊全)' : `🔍 匹配 ${recipe.matchCount}/${recipe.totalIng} 項`;
+        
+        card.innerHTML = `
+            <div class="match-score">${scoreText}</div>
+            <div class="recipe-name">${recipe.name}</div>
+            <div class="recipe-meta" style="margin-bottom: 5px;">需要的食材: <b>${recipe.ingredients.join('、')}</b></div>
+            <div class="recipe-meta">${recipe.details}</div>
+        `;
+        matchResults.appendChild(card);
+    });
+}
+
+// 啟動系統
+renderPipeline();
+renderIngredientsList();
+</script>
+
+</body>
+</html>
